@@ -1,20 +1,19 @@
 language: rust
 before_install:
-    - cargo install cross
+- cargo install cross
 script:
-    - cross build --target armv7-unknown-linux-gnueabihf --release
-    - cross test --target armv7-unknown-linux-gnueabihf --release
+- cross build --target armv7-unknown-linux-gnueabihf --release
+- cross test --target armv7-unknown-linux-gnueabihf --release
 before_deploy:
-    - git config --local user.name "JoshMarron"
-    - git config --local user.email "marronjosh@hotmail.com"
-    - export TRAVIS_TAG=$(date + '%Y%m%d%H%M%S')
-    - git tag $TRAVIS_TAG
-    - tar -C target/armv7-unknown-linux-gnueabihf/release -czf lightswitch-$TRAVIS_TAG-armv7.tar.gz lightswitch
+- git config --local user.name "JoshMarron"
+- git config --local user.email "marronjosh@hotmail.com"
+- export TRAVIS_TAG=$(date + '%Y%m%d%H%M%S')
+- tar -C target/armv7-unknown-linux-gnueabihf/release -czf lightswitch-$TRAVIS_TAG-armv7.tar.gz lightswitch
 deploy:
-    provider: releases
-    api_key:
-        secure: vPceqbnSBS0Eyg9byyFyIPK7U6fyw2uHmO4mGQQDfbPNmeGW76Pm2zhVnAyyClqzCGnVKSC1OviM/o0g4Iyfkhl/VIZIBvr9voWks6kw9szUgqeEEYjCWN6RPTJFqg3cybYezkXDzwRLsWWS/lj4qm2DEnbR9YWHZGRKr0ncj9p+tW4IOHV+2TgoaPkKdwyhsW/9FkSxOtL80oJHUlVjuE7gg+Nw4Q+wtF0beMd/I9SYwC13ephfEeJRKOnMGl2Z+s1pe+51m2AztYQ7Vfd8LBarfcDemuJcubajHe22WrCkyvo5sr15N9rEd0NQC8Sdj/E4gJhMCi2/j6dR3lUilmdRZwC4hslgVzt6WYf4ELvAP6AJMh7WbW0Pm18x2nbp9uPMn4dpd+L4PiM6t62bumPYd+eO+hmTlap8ButYyb8ymMWl+QaoCBqDK5rePczmQ3ME6/aQzjvpplA9Nl21C7ImWt5t7HdRN7Ob4YwhjYRqq/7v68ZLE04pJOa5zk5hbN1mNqZ2NfdhbwMQyymjMahXeU/jmZGX0XR9uRHfcbA2gDzmWTfYi2bvaTFmXGAGajBgSFCPe89gqwdbcogBhxlH085pFt0H4/hKh7tbbUtuLYIakULH2dy+LmRC5o82DOAW+PJUd9jshVf7SePi5YtTCbZxbTXsootG0h22Urk=
-    file: lightswitch-arm.tar.gz
-    on:
-        repo: JoshMarron/lightswitch
-    skip_cleanup: 'true'
+  provider: releases
+  api_key:
+    secure: VgsAtiHkNt4VW1U2UW4muvkE4DM3vqXmvbECmIVFMdOJa8/JoQ2VvPe9JTEI8slpQvMttyWlsNrJQNANnZPeZdlU2SXtcj9a6DLr2ohjTro8OKKXhDUaPjezQ8WWjEi9V308L2EPOmp4/3Wr68buCaFVRfOLoRBq06hvatqdJmSNE341pAKamoUDxeruS6L5ogMU4I0urzofg09EFwujvpyrgNlZdmYXoVdbKxmwOLG5XmH6tDGwWlw5akpbEyJ0NPEPUn2S4oLghHWhU5Qiz99Um2dgspYrbxl/THoE3Ht+YjO8to9GXhLfV+fQTUmC1ogfHE+u7EP6/eXnqgtfGphy+yV++1xI2Nbpdfa1K4QNX5Etd6ZKRHzjaKPlYzBToLfdxSsdiX006Jwvp4WZynSfKjvA2JukQChDW8/YnMDYp6XkJ45WHj5U4Vcxxfuu48p7RstHeVw+jtqBcVvhdgNQRjwooaAYCkcRGxF3O0JvLPCGulrD4vbBKKEDPoXV0O18My+v6o7rO45fOKfFYakfOrjx2nF1uphSn6al4teZWn9leGJojC8dxAjqT8DzxLW/KHcMo/jslxgM4wlGuVbvJC6cVkbOnOyekV6iiqSzdpSaOUTcMXNnDewYXm8cOrev/pWcVg954RsJoty3WXAopTIb4FH9nknA3jNe2r0=
+  file: lightswitch-$TRAVIS_TAG-armv7.tar.gz
+  on:
+    repo: JoshMarron/lightswitch
+  skip_cleanup: 'true'
