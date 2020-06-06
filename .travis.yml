@@ -5,7 +5,9 @@ script:
     - cross build --target armv7-unknown-linux-gnueabihf --release
     - cross test --target armv7-unknown-linux-gnueabihf --release
 before_deploy:
-    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date + '%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+    - git config --local user.name "JoshMarron"
+    - git config --local user.email "marronjosh@hotmail.com"
+    - export TRAVIS_TAG=$(date + '%Y%m%d%H%M%S')
     - git tag $TRAVIS_TAG
     - tar -C target/armv7-unknown-linux-gnueabihf/release -czf lightswitch-$TRAVIS_TAG-armv7.tar.gz lightswitch
 deploy:
