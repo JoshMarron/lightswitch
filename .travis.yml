@@ -5,12 +5,14 @@ script:
     - cross build --target armv7-unknown-linux-gnueabihf --release
     - cross test --target armv7-unknown-linux-gnueabihf --release
 before_deploy:
+    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date + '%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+    - git tag $TRAVIS_TAG
     - tar -C target/armv7-unknown-linux-gnueabihf/release -czf lightswitch-$TRAVIS_TAG-armv7.tar.gz lightswitch
 deploy:
     provider: releases
     api_key:
-    secure: vPceqbnSBS0Eyg9byyFyIPK7U6fyw2uHmO4mGQQDfbPNmeGW76Pm2zhVnAyyClqzCGnVKSC1OviM/o0g4Iyfkhl/VIZIBvr9voWks6kw9szUgqeEEYjCWN6RPTJFqg3cybYezkXDzwRLsWWS/lj4qm2DEnbR9YWHZGRKr0ncj9p+tW4IOHV+2TgoaPkKdwyhsW/9FkSxOtL80oJHUlVjuE7gg+Nw4Q+wtF0beMd/I9SYwC13ephfEeJRKOnMGl2Z+s1pe+51m2AztYQ7Vfd8LBarfcDemuJcubajHe22WrCkyvo5sr15N9rEd0NQC8Sdj/E4gJhMCi2/j6dR3lUilmdRZwC4hslgVzt6WYf4ELvAP6AJMh7WbW0Pm18x2nbp9uPMn4dpd+L4PiM6t62bumPYd+eO+hmTlap8ButYyb8ymMWl+QaoCBqDK5rePczmQ3ME6/aQzjvpplA9Nl21C7ImWt5t7HdRN7Ob4YwhjYRqq/7v68ZLE04pJOa5zk5hbN1mNqZ2NfdhbwMQyymjMahXeU/jmZGX0XR9uRHfcbA2gDzmWTfYi2bvaTFmXGAGajBgSFCPe89gqwdbcogBhxlH085pFt0H4/hKh7tbbUtuLYIakULH2dy+LmRC5o82DOAW+PJUd9jshVf7SePi5YtTCbZxbTXsootG0h22Urk=
-    file: lightswitch-$TRAVIS_TAG-arm.tar.gz
+        secure: vPceqbnSBS0Eyg9byyFyIPK7U6fyw2uHmO4mGQQDfbPNmeGW76Pm2zhVnAyyClqzCGnVKSC1OviM/o0g4Iyfkhl/VIZIBvr9voWks6kw9szUgqeEEYjCWN6RPTJFqg3cybYezkXDzwRLsWWS/lj4qm2DEnbR9YWHZGRKr0ncj9p+tW4IOHV+2TgoaPkKdwyhsW/9FkSxOtL80oJHUlVjuE7gg+Nw4Q+wtF0beMd/I9SYwC13ephfEeJRKOnMGl2Z+s1pe+51m2AztYQ7Vfd8LBarfcDemuJcubajHe22WrCkyvo5sr15N9rEd0NQC8Sdj/E4gJhMCi2/j6dR3lUilmdRZwC4hslgVzt6WYf4ELvAP6AJMh7WbW0Pm18x2nbp9uPMn4dpd+L4PiM6t62bumPYd+eO+hmTlap8ButYyb8ymMWl+QaoCBqDK5rePczmQ3ME6/aQzjvpplA9Nl21C7ImWt5t7HdRN7Ob4YwhjYRqq/7v68ZLE04pJOa5zk5hbN1mNqZ2NfdhbwMQyymjMahXeU/jmZGX0XR9uRHfcbA2gDzmWTfYi2bvaTFmXGAGajBgSFCPe89gqwdbcogBhxlH085pFt0H4/hKh7tbbUtuLYIakULH2dy+LmRC5o82DOAW+PJUd9jshVf7SePi5YtTCbZxbTXsootG0h22Urk=
+    file: lightswitch-arm.tar.gz
     on:
         repo: JoshMarron/lightswitch
     skip_cleanup: 'true'
