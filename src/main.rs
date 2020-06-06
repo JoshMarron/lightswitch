@@ -26,5 +26,5 @@ fn handle_request(request: &Request) -> Response {
 }
 
 fn main() {
-    rouille::start_server("localhost:6969", handle_request);
+    rouille::start_server("0.0.0.0:6969", handle_request);
 }
