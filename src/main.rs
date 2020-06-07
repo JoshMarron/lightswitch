@@ -31,7 +31,7 @@ impl Backlight {
         let mut file = File::open(self.bl_path.clone())?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
-        return if contents == "1".to_string() {
+        return if contents.contains("1") {
             Ok(BlStatus::Off)
         } else {
             Ok(BlStatus::On)
