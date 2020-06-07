@@ -4,6 +4,8 @@ extern crate rouille;
 use rouille::Request;
 use rouille::Response;
 
+use std::net::ToSocketAddrs;
+
 fn handle_request(request: &Request) -> Response {
     println!("Received request: {:?}", request);
     router!(request,
@@ -26,5 +28,8 @@ fn handle_request(request: &Request) -> Response {
 }
 
 fn main() {
+    println!("Hello world!");
+    let address = "0.0.0.0:6969".to_socket_addrs().unwrap();
+    println!("Will start server for {:?}", address);
     rouille::start_server("0.0.0.0:6969", handle_request);
 }
