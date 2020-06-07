@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate rouille;
+#[macro_use]
+extern crate maplit;
 
 use rouille::Request;
 use rouille::Response;
@@ -51,12 +53,50 @@ impl Backlight {
     }
 }
 
+fn handle_get_status(bl: &Backlight) -> Response {
+    match bl.check_status() {
+        Ok(status) => {
+            match status {
+                BlStatus::On => {
+                    println!("Found backlight is ON");
+                    let map = hashmap!{
+                        "status" => "ON"
+                    };
+                    return Response::json(&map);
+                },
+                BlStatus::Off => {
+                    println!("Found backlight is OFF");
+                    let map = hashmap!{
+                        "status" => "OFF"
+                    };
+                    return Response::json(&map);
+                }
+            }
+        },
+        Err(msg) => {
+            println!("Error: {:?}", msg);
+            return Response::empty_404();
+        }
+    }
+}
+
 fn handle_request(request: &Request) -> Response {
     println!("Received request: {:?}", request);
     let backlight = Backlight::new(BL_POWER_PATH.to_string());
+    let asset_response = rouille::match_assets(&request, "build");
+    if asset_response.is_success() {
+        return asset_response;
+    }
     router!(request,
         (GET) (/) => {
-            Response::text(format!("Backlight is currently: {:?}", backlight.check_status()))
+            let file = File::open("build/index.html").unwrap();
+            Response::from_file("text/html", file)
+        },
+        (GET) (/status) => {
+            let response = handle_get_status(&backlight)
+                .with_additional_header("Access-Control-Allow-Origin", "*");
+             println!("Sending response: {:?}", response);
+             response
         },
         (GET) (/goodbye) => {
             Response::text("Goodbye world!")

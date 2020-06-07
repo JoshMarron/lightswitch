@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 rouille="3.0.0"
+maplit="1.0.2"
