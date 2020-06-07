@@ -5,7 +5,8 @@ use rouille::Request;
 use rouille::Response;
 
 use std::net::ToSocketAddrs;
-use std::process::Command;
+use std::fs::{File, OpenOptions};
+use std::io::prelude::*;
 
 const BL_POWER_PATH: &str = "/sys/class/backlight/rpi_backlight/bl_power";
 
@@ -28,38 +29,27 @@ impl Backlight {
         }
     }
 
-    fn check_status(&self) -> BlStatus {
-        let comm = Command::new("cat")
-                          .args(&[format!("{}", self.bl_path)])
-                          .output()
-                          .expect("Failed to execute process!");
-
-        let output = String::from_utf8(comm.stdout).expect("Failed to get output");
-        return if output == "1".to_string() {
-            BlStatus::Off
+    fn check_status(&self) -> std::io::Result<BlStatus> {
+        let mut file = File::open(self.bl_path.clone())?;
+        let mut contents = String::new();
+        file.read_to_string(&mut contents)?;
+        return if contents == "1".to_string() {
+            Ok(BlStatus::Off)
         } else {
-            BlStatus::On
+            Ok(BlStatus::On)
         }
     }
 
-    fn turn_on(&self) -> Result<(), String> {
-        let comm = Command::new("echo")
-                          .args(&["-n", "0", &format!("> {}", self.bl_path)])
-                          .output();
-        match comm {
-            Ok(_) => Ok(()),
-            Err(_) => Err("Failed to turn on backlight!".to_string())
-        }
+    fn turn_on(&self) -> std::io::Result<()> {
+        let mut file = OpenOptions::new().write(true).open(self.bl_path.clone())?;
+        file.write_all(b"0")?;
+        Ok(())
     }
 
-    fn turn_off(&self) -> Result<(), String> {
-        let comm = Command::new("echo")
-                          .args(&["-n", "1", &format!("> {}", self.bl_path)])
-                          .output();
-        match comm {
-            Ok(_) => Ok(()),
-            Err(_) => Err("Failed to turn off backlight!".to_string())
-        }
+    fn turn_off(&self) -> std::io::Result<()> {
+        let mut file = OpenOptions::new().write(true).open(self.bl_path.clone())?;
+        file.write_all(b"1")?;
+        Ok(())
     }
 }
 
