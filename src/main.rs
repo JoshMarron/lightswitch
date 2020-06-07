@@ -8,9 +8,7 @@ use std::net::ToSocketAddrs;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 
-const BL_POWER_PATH: &str = "/sys/class/backlight/rpi_backlight/bl_power";
-
-const DUMMY_BL_POWER_PATH: &str = "dummy_bl_power";
+const BL_POWER_PATH: &str = "output/bl_power";
 
 struct Backlight {
     bl_path: String
@@ -55,7 +53,7 @@ impl Backlight {
 
 fn handle_request(request: &Request) -> Response {
     println!("Received request: {:?}", request);
-    let backlight = Backlight::new(DUMMY_BL_POWER_PATH.to_string());
+    let backlight = Backlight::new(BL_POWER_PATH.to_string());
     router!(request,
         (GET) (/) => {
             Response::text(format!("Backlight is currently: {:?}", backlight.check_status()))
